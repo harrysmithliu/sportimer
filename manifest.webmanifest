@@ -1,0 +1,13 @@
+{
+  "name": "训练计时器",
+  "short_name": "Timer",
+  "description": "清晰醒目的健身间歇倒计时",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#242424",
+  "theme_color": "#242424",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

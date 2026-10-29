@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#242424" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="清晰醒目的健身间歇倒计时。" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./app.css?v=28" />
+    <title>训练计时器</title>
+  </head>
+  <body>
+    <main class="timer-app" id="timerApp" data-phase="prepare">
+      <header class="topbar">
+        <button class="icon-button settings-button" type="button" aria-label="设置" data-placeholder="设置页将在下一步实现">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M19 4h10l1.4 5.1a16 16 0 0 1 3.6 1.5l4.8-2.2 7.1 7.1-2.2 4.8a16 16 0 0 1 1.5 3.6l5.1 1.4v10l-5.1 1.4a16 16 0 0 1-1.5 3.6l2.2 4.8-7.1 7.1-4.8-2.2a16 16 0 0 1-3.6 1.5L29 56H19l-1.4-5.1a16 16 0 0 1-3.6-1.5l-4.8 2.2-7.1-7.1 2.2-4.8a16 16 0 0 1-1.5-3.6L-1 34v-10l5.1-1.4a16 16 0 0 1 1.5-3.6l-2.2-4.8 7.1-7.1 4.8 2.2a16 16 0 0 1 3.6-1.5L19 4Z" transform="translate(4.773 .6) scale(.78)"/><circle cx="24" cy="24" r="8"/></svg>
+        </button>
+        <div class="workout-heading">
+          <input id="workoutName" class="workout-name" aria-label="训练名称，可编辑" maxlength="28" value="INLINE PLANK" spellcheck="false" />
+          <div class="total-time" id="totalTime" aria-live="off">04:10</div>
+        </div>
+        <button class="icon-button time-button" id="timeSettingsButton" type="button" aria-label="时间设置">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="21"/>
+            <g class="clock-ticks">
+              <path d="M24 6v2M42 24h-2M24 42v-2M6 24h2"/>
+              <path d="M24 6v2M42 24h-2M24 42v-2M6 24h2" transform="rotate(30 24 24)"/>
+              <path d="M24 6v2M42 24h-2M24 42v-2M6 24h2" transform="rotate(60 24 24)"/>
+            </g>
+            <path d="M24 24l-8-8"/>
+          </svg>
+        </button>
+        <button class="reset-button" id="resetButton" type="button" aria-label="重置训练">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <g transform="translate(48 0) scale(-1 1)">
+              <path class="reset-arc" d="M39 25a15 15 0 1 1-15-15"/>
+              <path class="reset-arrow" d="M23 2l15 8-15 9Z"/>
+            </g>
+          </svg>
+        </button>
+      </header>
+
+      <section class="current-section phase-prepare" aria-label="当前训练阶段">
+        <div class="phase-label" id="phaseLabel">PREPARE</div>
+        <div class="countdown" id="countdown" aria-live="off">00:05</div>
+        <div class="phase-hint" id="phaseHint">准备开始</div>
+      </section>
+
+      <section class="next-section" id="nextSection" aria-label="下一个阶段">
+        <div class="next-label" id="nextLabel">WORK</div>
+        <div class="next-time" id="nextTime">00:50</div>
+      </section>
+
+      <footer class="controls">
+        <div class="rounds-readout" aria-live="polite">
+          <span class="rounds-number" id="roundsLeft">4</span>
+          <span class="rounds-caption">ROUNDS LEFT</span>
+        </div>
+        <button class="play-button" id="playButton" type="button" aria-label="开始训练">
+          <span class="play-ring">
+            <svg class="play-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M17 10v28l23-14z"/></svg>
+            <svg class="pause-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M14 10h8v28h-8zM27 10h8v28h-8z"/></svg>
+          </span>
+          <span class="play-caption" id="playCaption">START</span>
+        </button>
+        <div class="footer-spacer" aria-hidden="true"></div>
+      </footer>
+      <section class="intervals-page" id="intervalsPage" aria-label="训练时间设置" hidden>
+        <header class="intervals-header">
+          <button type="button" id="intervalsCancel">CANCEL</button>
+          <h1>ROUNDS</h1>
+          <button type="button" id="intervalsSave">SAVE</button>
+        </header>
+        <div class="intervals-content">
+          <div class="intervals-heading">INTERVALS</div>
+          <div class="intervals-list">
+            <button class="interval-row" type="button" data-interval="prepare">
+              <span class="interval-title"><span class="interval-dot dot-prepare"></span>PREPARE</span>
+              <span class="interval-description">COUNTDOWN BEFORE YOU START</span>
+              <span class="interval-value" id="settingPrepare">:05</span><span class="interval-chevron" aria-hidden="true"></span>
+            </button>
+            <button class="interval-row" type="button" data-interval="work">
+              <span class="interval-title"><span class="interval-dot dot-work"></span>WORK</span>
+              <span class="interval-description">DO EXERCISES FOR THIS LONG</span>
+              <span class="interval-value" id="settingWork">:50</span><span class="interval-chevron" aria-hidden="true"></span>
+            </button>
+            <button class="interval-row" type="button" data-interval="rest">
+              <span class="interval-title"><span class="interval-dot dot-rest"></span>REST</span>
+              <span class="interval-description">REST FOR THIS LONG</span>
+              <span class="interval-value" id="settingRest">:15</span><span class="interval-chevron" aria-hidden="true"></span>
+            </button>
+            <button class="interval-row" type="button" data-interval="rounds">
+              <span class="interval-title"><span class="interval-dot dot-rounds"></span>ROUNDS</span>
+              <span class="interval-description">ONE ROUND IS WORK + REST</span>
+              <span class="interval-value" id="settingRounds">4</span><span class="interval-chevron" aria-hidden="true"></span>
+            </button>
+            <button class="interval-row" type="button" data-interval="cooldown">
+              <span class="interval-title"><span class="interval-dot dot-cooldown"></span>COOLDOWN</span>
+              <span class="interval-description">COOLDOWN AFTER WORKOUT</span>
+              <span class="interval-value" id="settingCooldown">:00</span><span class="interval-chevron" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="picker-page" id="pickerPage" aria-label="修改训练参数" hidden>
+        <header class="picker-header">
+          <button type="button" id="pickerBack">BACK</button>
+          <h1 id="pickerTitle">PREPARE</h1>
+          <button type="button" id="pickerDone">DONE</button>
+        </header>
+        <div class="picker-body" id="pickerBody">
+          <div class="picker-wheel" data-wheel="minutes">
+            <div class="wheel-frame"><div class="wheel-list" role="spinbutton" tabindex="0" aria-label="分钟" aria-valuemin="0" aria-valuemax="99"></div></div><span class="wheel-unit">MIN</span>
+          </div>
+          <div class="picker-wheel" data-wheel="seconds">
+            <div class="wheel-frame"><div class="wheel-list" role="spinbutton" tabindex="0" aria-label="秒数" aria-valuemin="0" aria-valuemax="59"></div></div><span class="wheel-unit">SEC</span>
+          </div>
+          <div class="picker-wheel picker-rounds" data-wheel="rounds" hidden>
+            <div class="wheel-frame"><div class="wheel-list" role="spinbutton" tabindex="0" aria-label="轮数" aria-valuemin="1" aria-valuemax="99"></div></div><span class="wheel-unit">ROUNDS</span>
+          </div>
+        </div>
+        <div class="picker-colors" role="group" aria-label="选择颜色">
+          <button type="button" data-color="yellow" aria-label="黄色"></button>
+          <button type="button" data-color="green" aria-label="绿色"></button>
+          <button type="button" data-color="red" aria-label="红色"></button>
+          <button type="button" data-color="blue" aria-label="蓝色"></button>
+        </div>
+      </section>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <div class="sr-only" id="announcement" aria-live="assertive"></div>
+    </main>
+    <script src="./app.js?v=27" defer></script>
+  </body>
+</html>
